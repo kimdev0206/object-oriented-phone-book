@@ -1,36 +1,37 @@
+const fs = require("node:fs");
+const readline = require("node:readline/promises");
+
 function Database() {
   this.filePath = "assets/data.txt";
   this.size = 0;
 }
 
-Database.prototype.addNewNode = function ({ name, phone }) {
+Database.prototype.addNode = function () {
   throw new Error("구현체에서 호출해주세요.");
 };
 
-Database.prototype.findNode = function (key) {
+Database.prototype.findNode = function () {
   throw new Error("구현체에서 호출해주세요.");
 };
 
-Database.prototype.printAllNode = function () {
+Database.prototype.printNodes = function () {
   throw new Error("구현체에서 호출해주세요.");
 };
 
-Database.prototype.removeNode = function (key) {
+Database.prototype.removeNode = function () {
   throw new Error("구현체에서 호출해주세요.");
 };
 
-Database.prototype.loadList = function ({ fs, readlinePromises }) {
-  const readline = readlinePromises.createInterface({
-    input: fs.createReadStream(this.filePath, { encoding: "utf8" }),
+Database.prototype.load = function () {
+  const rl = readline.createInterface({
+    input: fs.createReadStream(this.filePath),
   });
 
-  readline.on("line", (line) => {
-    this.addNewNode(JSON.parse(line));
-  });
+  rl.on("line", (line) => this.addNode(JSON.parse(line)));
 
-  readline.on("close", () => {
-    if (!this.getSize()) {
-      console.error("> INFO: 저장된 데이터가 존재하지 않습니다.");
+  rl.on("close", () => {
+    if (!this.size) {
+      console.log("> INFO: 저장된 데이터가 존재하지 않습니다.");
       return;
     }
 
@@ -38,11 +39,11 @@ Database.prototype.loadList = function ({ fs, readlinePromises }) {
   });
 };
 
-Database.prototype.saveList = function (fs) {
+Database.prototype.save = function () {
   const stream = fs.createWriteStream(this.filePath);
 
-  if (!this.getSize()) {
-    console.error("> INFO: 저장할 데이터가 존재하지 않습니다.");
+  if (!this.size) {
+    console.log("> INFO: 저장할 데이터가 존재하지 않습니다.");
     stream.end();
   }
 

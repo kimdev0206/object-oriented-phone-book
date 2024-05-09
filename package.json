@@ -1,14 +1,13 @@
 {
   "name": "object-oriented-phone-book",
-  "version": "1.0.0",
-  "description": "",
+  "author": "Yongki Kim",
+  "license": "ISC",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "node --watch index.js",
+    "data": "node script/index.js"
   },
-  "author": "Yongki Kim",
-  "license": "ISC",
   "dependencies": {
     "@faker-js/faker": "^8.0.2"
   }

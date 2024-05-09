@@ -11,7 +11,7 @@ TrieNode.prototype.setUserData = function ({ name, phone }) {
   this.userData = { name, phone };
 };
 
-TrieNode.prototype.deleteUserData = function () {  
+TrieNode.prototype.deleteUserData = function () {
   delete this.userData;
 };
 
@@ -29,14 +29,6 @@ TrieNode.prototype.deleteChild = function (char) {
 
 TrieNode.prototype.getChildrenSize = function () {
   return this.children.size;
-};
-
-TrieNode.prototype.getIsEndOfWord = function () {
-  return this.isEndOfWord;
-};
-
-TrieNode.prototype.setIsEndOfWord = function (isEndOfWord) {
-  this.isEndOfWord = isEndOfWord;
 };
 
 module.exports = TrieNode;

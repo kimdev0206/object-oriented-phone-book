@@ -1,5 +1,6 @@
+const ListNode = require("./node");
 const Database = require("../database");
-const ListNode = require("./list-node");
+const { perfTime } = require("../utils");
 
 function SingleLinkedList() {
   Database.call(this);
@@ -10,8 +11,8 @@ function SingleLinkedList() {
 SingleLinkedList.prototype = Object.create(Database.prototype);
 SingleLinkedList.prototype.constructor = SingleLinkedList;
 
-SingleLinkedList.prototype.addNewNode = function ({ name, phone }) {
-  const newNode = new ListNode({ name, phone });
+SingleLinkedList.prototype.addNode = function ({ name, phone }) {
+  let newNode = new ListNode({ name, phone });
 
   if (!this.head) {
     this.head = newNode;
@@ -19,7 +20,7 @@ SingleLinkedList.prototype.addNewNode = function ({ name, phone }) {
     return;
   }
 
-  newNode.setNext(this.head);
+  newNode.next = this.head;
   this.head = newNode;
   this.size += 1;
 };
@@ -28,15 +29,13 @@ SingleLinkedList.prototype.findNode = function (name) {
   let cur = this.head;
 
   while (cur) {
-    if (cur.getName() === name) {
-      return cur;
-    }
+    if (cur.getName() === name) return cur;
 
-    cur = cur.getNext();
+    cur = cur.next;
   }
 };
 
-SingleLinkedList.prototype.printAllNode = function () {
+SingleLinkedList.prototype.printNodes = function () {
   let cur = this.head;
   let i = 1;
 
@@ -44,7 +43,7 @@ SingleLinkedList.prototype.printAllNode = function () {
     console.log(`> ${i}: ${JSON.stringify(cur.getUserData())}`);
     i += 1;
 
-    cur = cur.getNext();
+    cur = cur.next;
   }
 };
 
@@ -52,37 +51,35 @@ SingleLinkedList.prototype.removeNode = function (name) {
   let prev = null;
   let cur = this.head;
 
-  if (!cur.getNext()) {
-    this.head = null;
-  }
+  if (!cur.next) this.head = null;
 
   while (cur) {
     if (prev && cur.getName() === name) {
-      prev.setNext(cur.getNext());
+      prev.next = cur.next;
     } else {
       prev = cur;
     }
 
-    cur = cur.getNext();
+    cur = cur.next;
   }
 
   this.size -= 1;
 };
 
-SingleLinkedList.prototype.loadList = function ({ fs, readlinePromises }) {
-  Database.prototype.loadList.call(this, { fs, readlinePromises });
-};
+SingleLinkedList.prototype.load = perfTime(function () {
+  Database.prototype.load.call(this);
+});
 
-SingleLinkedList.prototype.saveList = function (fs) {
-  const stream = Database.prototype.saveList.call(this, fs);
+SingleLinkedList.prototype.save = perfTime(function () {
+  let stream = Database.prototype.save.call(this);
   let cur = this.head;
 
   while (cur) {
     stream.write(JSON.stringify(cur.getUserData()) + "\n");
-    cur = cur.getNext();
+    cur = cur.next;
   }
 
-  stream.end();  
-};
+  stream.end();
+});
 
-module.exports = new SingleLinkedList();
+module.exports = SingleLinkedList;

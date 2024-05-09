@@ -15,12 +15,4 @@ ListNode.prototype.getName = function () {
   return this.userData.name;
 };
 
-ListNode.prototype.getNext = function () {
-  return this.next;
-};
-
-ListNode.prototype.setNext = function (node) {
-  this.next = node;
-};
-
 module.exports = ListNode;
